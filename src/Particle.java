@@ -2,18 +2,23 @@ public class Particle {
     private Chord[] curPos;
     private Chord[] bestPos;
     private double[] velocity;
-    private int fintess;
+    private int fitness;
 
-    Particle(int dim) {
-        curPos = new Chord[dim];
-        bestPos = new Chord[dim];
-        velocity = new double[dim];
-        fintess = -1;
+    Particle() {
+        curPos = new Chord[Constants.C_DIMENSIONS];
+        bestPos = new Chord[Constants.C_DIMENSIONS];
+        velocity = new double[Constants.C_DIMENSIONS];
+        fitness = -1;
+    }
+
+    // TODO: Particle initialization
+    private void init() {
+
     }
 
     public int getFintess() {
         findFitness();
-        return fintess;
+        return fitness;
     }
 
     //TODO: Write correct implementation
@@ -46,7 +51,7 @@ public class Particle {
     }
 
     public void setFintess(int fintess) {
-        this.fintess = fintess;
+        this.fitness = fintess;
     }
 
 }
