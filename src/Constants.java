@@ -3,7 +3,7 @@ public interface Constants {
     int UP_VAL = 96;
 
     int C_SWARMSIZE = 100;
-    int C_DIMENSIONS = 16;
+    int C_DIMENSIONS = 8;
     int C_MAX_IT = 300;
     double C_W = 1.0;
     double C_C1 = 2.0;
