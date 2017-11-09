@@ -5,13 +5,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Particle {
     private ArrayList<Chord> curPos;
     private ArrayList<Chord> bestPos;
+    // TODO 3 x 8 array for velocity
     private ArrayList<Double> velocity;
+    private ArrayList<Integer> tonalityNotes;
     private int fitness;
 
-    Particle() {
-        curPos = new ArrayList<>();
-        bestPos = new ArrayList<>();
-        velocity = new ArrayList<>();
+    /* Mode - major / minor */
+    Particle(ArrayList<Integer> tonalityNotes) {
+        this.curPos = new ArrayList<>();
+        this.bestPos = new ArrayList<>();
+        this.velocity = new ArrayList<>();
+        this.tonalityNotes = tonalityNotes;
+
         fitness = -1;
         init();
     }
@@ -20,12 +25,12 @@ public class Particle {
     private void init() {
         for (int i = 0; i < Constants.C_DIMENSIONS; i++) {
             curPos.add(new Chord(getRandomChord()));
-            System.out.println(curPos.get(0));
+//            System.out.println(curPos.get(0));
             bestPos.add(curPos.get(i));
             int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
             int max_v = -min_v;
             velocity.add(getRand(min_v, max_v));
-            System.out.println(curPos.get(i).toString());
+//            System.out.println(curPos.get(i).toString());
         }
     }
 
