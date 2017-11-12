@@ -10,7 +10,9 @@ public class ChordSwarm {
 
     ChordSwarm() {
         swarm = new ArrayList<>();
+        gFitness = Integer.MIN_VALUE;
         Pair<Integer, Integer> tonality = generateTonality();
+        int mode = tonality.getValue();
         System.out.println(tonality); // TODO: Remove
 
         ArrayList<Integer> tonalityNotes = getTonalityNotes(tonality.getKey(), tonality.getValue());
@@ -19,8 +21,32 @@ public class ChordSwarm {
         }
         System.out.println();
 
+        for (int i = 0; i < Constants.C_SWARMSIZE; i++)
+            swarm.add(new Particle(tonalityNotes, mode));
+
+        updateGlobal();
+    }
+
+    public void nextIteration() {
         for (int i = 0; i < Constants.C_SWARMSIZE; i++) {
-            swarm.add(new Particle(tonalityNotes));
+            swarm.get(i).nextIteration(globalPos, gFitness);
+            for (Chord c: globalPos)
+                System.out.print(c + " ");
+            System.out.println(" | Fitness: " + gFitness);
+            // updateGlobal();
+        }
+    }
+
+    private void updateGlobal() {
+        int index = -1;
+        for (int i = 0; i < Constants.C_SWARMSIZE; i++) {
+            if (gFitness < swarm.get(i).getFitness()) {
+                gFitness = swarm.get(i).getFitness();
+                index = i;
+            }
+        }
+        if (index != -1) {
+            globalPos = new ArrayList<>(swarm.get(index).getBestPos());
         }
     }
 
