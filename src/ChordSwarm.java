@@ -5,13 +5,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ChordSwarm {
     private ArrayList<Particle> swarm;
-    private ArrayList<Chord> globalPos;
-    private int gFitness;
+    private static ArrayList<Chord> globalPos;
+    private static int gFitness;
+    private Pair<Integer, Integer> tonality;
 
     ChordSwarm() {
         swarm = new ArrayList<>();
         gFitness = Integer.MIN_VALUE;
-        Pair<Integer, Integer> tonality = generateTonality();
+        tonality = generateTonality();
         int mode = tonality.getValue();
         System.out.println(tonality); // TODO: Remove
 
@@ -27,14 +28,21 @@ public class ChordSwarm {
         updateGlobal();
     }
 
+    public void dropSwarm() {
+        swarm = new ArrayList<>();
+        gFitness = Integer.MIN_VALUE;
+        int mode = tonality.getValue();
+        ArrayList<Integer> tonalityNotes = getTonalityNotes(tonality.getKey(), tonality.getValue());
+        for (int i = 0; i < Constants.C_SWARMSIZE; i++)
+            swarm.add(new Particle(tonalityNotes, mode));
+
+        updateGlobal();
+    }
+
     public void nextIteration() {
-        for (int i = 0; i < Constants.C_SWARMSIZE; i++) {
-            swarm.get(i).nextIteration(globalPos, gFitness);
-            for (Chord c: globalPos)
-                System.out.print(c + " ");
-            System.out.println(" | Fitness: " + gFitness);
-            // updateGlobal();
-        }
+        for (int i = 0; i < Constants.C_SWARMSIZE; i++)
+            swarm.get(i).nextIteration(globalPos);
+        updateGlobal();
     }
 
     private void updateGlobal() {
@@ -46,7 +54,14 @@ public class ChordSwarm {
             }
         }
         if (index != -1) {
-            globalPos = new ArrayList<>(swarm.get(index).getBestPos());
+            System.out.println("new global best: " + gFitness);
+            globalPos = new ArrayList<>();
+            ArrayList<Chord> best_pos = swarm.get(index).getBestPos();
+            for (Chord best_p : best_pos) {
+                globalPos.add(best_p.cloneIt());
+                System.out.print(best_p);
+            }
+            System.out.println();
         }
     }
 
