@@ -52,7 +52,7 @@ public class Main {
         int curSize = result.size();
 
         if (!(curSize == 0) && result.get(curSize - 2) == result.get(curSize - 1) &&
-                result.get(curSize - 1) == bar.get(0) && bar.get(0) == bar.get(1))
+                (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))
             return false;
 
         for (Chord c : bar) result.add(c.cloneIt());
