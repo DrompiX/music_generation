@@ -7,9 +7,9 @@ import javax.sound.midi.Synthesizer;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        /*Synthesizer synth = MidiSystem.getSynthesizer();
+        Synthesizer synth = MidiSystem.getSynthesizer();
         synth.open();
-        MidiChannel[] channels = synth.getChannels();*/
+        MidiChannel[] channels = synth.getChannels();
 
         ChordSwarm swarm = new ChordSwarm();
         ArrayList<Chord> result = generateAllChords(swarm);
@@ -18,22 +18,13 @@ public class Main {
         for (Chord c: result)
             System.out.print(c);
 
-        /*for (Chord c: result) {
+        for (Chord c: result) {
             for (int i: c.notes)
                 channels[0].noteOn(i, 75);
             Thread.sleep(1000);
             for (int i: c.notes)
                 channels[0].noteOff(i);
-        }*/
-
-//        synth.close();
-//        Thread.sleep(1000);
-//        for (Particle p: swarm.getSwarm()) {
-//            for (Chord c: p.getBestPos())
-//                System.out.print(c);
-//            System.out.println(" | f(x): " + p.getFitness());
-//        }
-//        System.out.println();
+        }
     }
 
     private static ArrayList<Chord> generateBar(ChordSwarm swarm) {
@@ -51,8 +42,10 @@ public class Main {
     private static boolean appendBar(ArrayList<Chord> result, ArrayList<Chord> bar) {
         int curSize = result.size();
 
-        if (!(curSize == 0) && result.get(curSize - 2) == result.get(curSize - 1) &&
-                (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))
+        /*if (result.get(curSize - 2) == result.get(curSize - 1) &&
+                (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))*/
+        if (curSize > 0 && (result.get(curSize - 2) == result.get(curSize - 1) && result.get(curSize - 1) == bar.get(0)
+                || result.get(curSize - 1) == bar.get(0) && (result.get(0) == bar.get(1))))
             return false;
 
         for (Chord c : bar) result.add(c.cloneIt());
