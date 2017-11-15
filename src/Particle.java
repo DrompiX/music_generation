@@ -10,7 +10,6 @@ public class Particle {
     private ArrayList<Integer> startingNotes;
     private int fitness;
     private int mode; /* 0 = Major; 1 = Minor*/
-    private int min_v, max_v;
 
     /* Mode - major / minor */
     Particle(ArrayList<Integer> tonalityNotes, int mode) {
@@ -29,8 +28,8 @@ public class Particle {
     private void init() {
         for (int i = 0; i < Constants.C_DIMENSIONS; i++) {
             curPos.add(new Chord(getRandomChord()));
-            min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
-            max_v = -min_v;
+            int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
+            int max_v = -min_v;
             for (int j = 0; j < 3; j++)
                 velocity[i][j] = getRand(min_v, max_v);
         }
@@ -169,36 +168,16 @@ public class Particle {
         return curPos;
     }
 
-    public void setCurPos(ArrayList<Chord> curPos) {
-        this.curPos = curPos;
-    }
-
     public ArrayList<Chord> getBestPos() {
         return bestPos;
-    }
-
-    public void setBestPos(ArrayList<Chord> bestPos) {
-        this.bestPos = bestPos;
     }
 
     public double[][] getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(double[][] velocity) {
-        this.velocity = velocity;
-    }
-
     public int getFitness() {
         return fitness;
-    }
-
-    public void setFitness(int fitness) {
-        this.fitness = fitness;
-    }
-
-    public void setFintess(int fintess) {
-        this.fitness = fintess;
     }
 
 }

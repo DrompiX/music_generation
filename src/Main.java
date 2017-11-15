@@ -6,6 +6,8 @@ import javax.sound.midi.Synthesizer;
 
 public class Main {
 
+    static int counter;
+
     public static void main(String[] args) throws Exception {
         Synthesizer synth = MidiSystem.getSynthesizer();
         synth.open();
@@ -31,7 +33,7 @@ public class Main {
         ArrayList<Chord> bar = new ArrayList<>();
         int it = 0;
 
-        while (swarm.getgFitness() < 10000 && it < Constants.C_MAX_IT) {
+        while (swarm.getgFitness() < Constants.C_NICE_FITNESS && it < Constants.C_MAX_IT) {
             swarm.nextIteration();
             it++;
         }
@@ -44,8 +46,9 @@ public class Main {
 
         /*if (result.get(curSize - 2) == result.get(curSize - 1) &&
                 (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))*/
+        // TODO: check condition to eliminate 3 chords in a row
         if (curSize > 0 && (result.get(curSize - 2) == result.get(curSize - 1) && result.get(curSize - 1) == bar.get(0)
-                || result.get(curSize - 1) == bar.get(0) && (result.get(0) == bar.get(1))))
+                || result.get(curSize - 1) == bar.get(0) && result.get(0) == bar.get(1)))
             return false;
 
         for (Chord c : bar) result.add(c.cloneIt());

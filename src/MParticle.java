@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class MParticle {
-    private ArrayList<Integer> curPos;
-    private ArrayList<Integer> bestPos;
+    private int[] curPos;
+    private int[] bestPos;
     private double[] velocity;
     private ArrayList<Integer> tonalityNotes;
     private ArrayList<Integer> startingNotes;
