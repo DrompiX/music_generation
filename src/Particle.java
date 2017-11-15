@@ -9,7 +9,6 @@ public class Particle {
     private Tonality tonality;
     private ArrayList<Integer> startingNotes;
     private int fitness;
-    private int mode; /* 0 = Major; 1 = Minor*/
 
     /* Mode - major / minor */
     Particle(Tonality tonality) {
@@ -18,7 +17,6 @@ public class Particle {
         this.velocity = new double[Constants.C_DIMENSIONS][3];
         this.tonality = tonality;
         this.startingNotes = getStartingNotes(tonality);
-        this.mode = tonality.getMode();
 
         init();
         fitness = findFitness();
@@ -75,6 +73,7 @@ public class Particle {
     /* TODO: Write correct implementation */
     private int findFitness() {
         int fitness = 0;
+        int mode = tonality.getMode();
         for (int i = 0; i < curPos.size(); i++) {
             int[] chord = curPos.get(i).notes;
 

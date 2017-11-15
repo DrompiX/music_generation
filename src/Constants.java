@@ -11,10 +11,11 @@ public interface Constants {
     double C_C2 = 0.1795;//0.1795; //0.15
 
 
-    int M_SWARMSIZE = 100;
+    int M_SWARMSIZE = 4759;
     int M_DIMENSIONS = 8;
-    int M_MAX_IT = 300;
-    double M_W = 1.0;
-    double M_C1 = 2.0;
-    double M_C2 = 2.0;
+    int M_MAX_IT = 10000;
+    int M_NICE_FITNESS = 10000;
+    double M_W = 0.4;
+    double M_C1 = 2;
+    double M_C2 = 2;
 }

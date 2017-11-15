@@ -5,16 +5,16 @@ public class MParticle {
     private int[] curPos;
     private int[] bestPos;
     private double[] velocity;
-    private ArrayList<Integer> tonalityNotes;
+    private Tonality tonality;
+    private ArrayList<Chord> chords;
     private int fitness;
-    private int mode; /* 0 = Major; 1 = Minor*/
 
-    MParticle(Tonality tonality) {
+    MParticle(Tonality tonality, ArrayList<Chord> chords) {
         this.curPos = new int[Constants.M_DIMENSIONS];
         this.bestPos = new int[Constants.M_DIMENSIONS];
         this.velocity = new double[Constants.M_DIMENSIONS];
-        this.tonalityNotes = tonality.getTonalityNotes();
-        this.mode = tonality.getMode();
+        this.tonality = tonality;
+        this.chords = chords;
 
         init();
         fitness = findFitness();
@@ -24,7 +24,7 @@ public class MParticle {
     private void init() {
         int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
         int max_v = -min_v;
-        for (int i = 0; i < Constants.C_DIMENSIONS; i++) {
+        for (int i = 0; i < Constants.M_DIMENSIONS; i++) {
             curPos[i] = getRandInt(Constants.LOW_VAL, Constants.UP_VAL);
             velocity[i] = getRandDouble(min_v, max_v);
         }
@@ -33,9 +33,9 @@ public class MParticle {
 
     public void nextIteration(int[] globalPos) {
         for (int i = 0; i < velocity.length; i++) {
-            velocity[i] = Constants.C_W * velocity[i] +
-                    Constants.C_C1 * getRandDouble(0, 1) * (bestPos[i] - curPos[i]) *
-                            Constants.C_C2 * getRandDouble(0, 1) * (globalPos[i]- curPos[i]);
+            velocity[i] = Constants.M_W * velocity[i] +
+                    Constants.M_C1 * getRandDouble(0, 1) * (bestPos[i] - curPos[i]) *
+                            Constants.M_C2 * getRandDouble(0, 1) * (globalPos[i] - curPos[i]);
         }
         updateNotes();
 
@@ -52,13 +52,25 @@ public class MParticle {
 
     private void updateNotes() {
         for (int i = 0; i < velocity.length; i++) {
-
+            curPos[i] += ((int) velocity[i]) % 97 - 48;
+            if (curPos[i] < 48 || curPos[i] > 96)
+                curPos[i] = curPos[i] % 49 + 48;
         }
     }
 
     /* TODO: Write correct implementation */
     private int findFitness() {
-        return 0;
+        int fitness = 0;
+        for (int i = 0; i < curPos.length; i++) {
+            if (i % 2 == 0) {
+                fitness += chords.get(i / 2).isSuitable(curPos[i]) ? 1000 : -1000;
+            } else {
+                fitness += tonality.contains(curPos[i]) ? 1000 : -1000;
+            }
+            if (i < curPos.length - 1 && Math.abs(curPos[i] - curPos[i + 1]) <= 12) fitness += 500;
+            else fitness -= 1000;
+        }
+        return fitness;
     }
 
     private int getRandInt(int low, int high) {
