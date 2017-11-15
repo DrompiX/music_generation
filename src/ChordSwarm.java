@@ -1,51 +1,33 @@
-import javafx.util.Pair;
 import java.util.ArrayList;
 
-public class ChordSwarm extends Swarm {
+public class ChordSwarm {
     private ArrayList<Particle> swarm;
     private ArrayList<Chord> globalPos;
     private int gFitness;
-    private Pair<Integer, Integer> tonality;
 
-    ChordSwarm() {
+    ChordSwarm(Tonality tonality) {
         swarm = new ArrayList<>();
         gFitness = Integer.MIN_VALUE;
-        tonality = generateTonality();
-        int mode = tonality.getValue();
-        System.out.println(tonality); // TODO: Remove
+        System.out.println("Chords: " + tonality.getTonic() + " " + tonality.getMode()); // TODO: Remove
 
-        ArrayList<Integer> tonalityNotes = getTonalityNotes(tonality.getKey(), tonality.getValue());
+        ArrayList<Integer> tonalityNotes = tonality.getTonalityNotes();
         for (Integer ton: tonalityNotes) { // TODO: Remove
             System.out.print(ton + " ");
         }
         System.out.println();
 
         for (int i = 0; i < Constants.C_SWARMSIZE; i++)
-            swarm.add(new Particle(tonalityNotes, mode));
+            swarm.add(new Particle(tonality));
 
         updateGlobal();
     }
 
-    @Override
-    public void dropSwarm() {
-        swarm = new ArrayList<>();
-        gFitness = Integer.MIN_VALUE;
-        int mode = tonality.getValue();
-        ArrayList<Integer> tonalityNotes = getTonalityNotes(tonality.getKey(), tonality.getValue());
-        for (int i = 0; i < Constants.C_SWARMSIZE; i++)
-            swarm.add(new Particle(tonalityNotes, mode));
-
-        updateGlobal();
-    }
-
-    @Override
     public void nextIteration() {
         for (int i = 0; i < Constants.C_SWARMSIZE; i++)
             swarm.get(i).nextIteration(globalPos);
         updateGlobal();
     }
 
-    @Override
     protected void updateGlobal() {
         int index = -1;
         for (int i = 0; i < Constants.C_SWARMSIZE; i++) {

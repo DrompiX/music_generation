@@ -12,7 +12,7 @@ public interface Constants {
 
 
     int M_SWARMSIZE = 100;
-    int M_DIMENSIONS = 32;
+    int M_DIMENSIONS = 8;
     int M_MAX_IT = 300;
     double M_W = 1.0;
     double M_C1 = 2.0;

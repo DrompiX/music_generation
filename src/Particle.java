@@ -6,19 +6,19 @@ public class Particle {
     private ArrayList<Chord> curPos;
     private ArrayList<Chord> bestPos;
     private double[][] velocity;
-    private ArrayList<Integer> tonalityNotes;
+    private Tonality tonality;
     private ArrayList<Integer> startingNotes;
     private int fitness;
     private int mode; /* 0 = Major; 1 = Minor*/
 
     /* Mode - major / minor */
-    Particle(ArrayList<Integer> tonalityNotes, int mode) {
+    Particle(Tonality tonality) {
         this.curPos = new ArrayList<>();
         this.bestPos = new ArrayList<>();
         this.velocity = new double[Constants.C_DIMENSIONS][3];
-        this.tonalityNotes = new ArrayList<>(tonalityNotes);
-        this.startingNotes = getStartingNotes(tonalityNotes);
-        this.mode = mode;
+        this.tonality = tonality;
+        this.startingNotes = getStartingNotes(tonality);
+        this.mode = tonality.getMode();
 
         init();
         fitness = findFitness();
@@ -26,10 +26,10 @@ public class Particle {
 
     /* TODO: TEST Particle initialization */
     private void init() {
+        int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
+        int max_v = -min_v;
         for (int i = 0; i < Constants.C_DIMENSIONS; i++) {
             curPos.add(new Chord(getRandomChord()));
-            int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
-            int max_v = -min_v;
             for (int j = 0; j < 3; j++)
                 velocity[i][j] = getRand(min_v, max_v);
         }
@@ -78,9 +78,9 @@ public class Particle {
         for (int i = 0; i < curPos.size(); i++) {
             int[] chord = curPos.get(i).notes;
 
-            fitness += tonalityNotes.contains(chord[0]) ? 250 : -1000;
-            fitness += tonalityNotes.contains(chord[1]) ? 250 : -1000;
-            fitness += tonalityNotes.contains(chord[2]) ? 250 : -1000;
+            fitness += tonality.contains(chord[0]) ? 250 : -1000;
+            fitness += tonality.contains(chord[1]) ? 250 : -1000;
+            fitness += tonality.contains(chord[2]) ? 250 : -1000;
 
             /* Check if the first note is tonic or dominant or subdominant */
             if (startingNotes.contains(chord[0])) {
@@ -137,7 +137,8 @@ public class Particle {
         return startingNotes.indexOf(note) % 3 == 2;
     }
 
-    private ArrayList<Integer> getStartingNotes(ArrayList<Integer> notes) {
+    private ArrayList<Integer> getStartingNotes(Tonality tonality) {//ArrayList<Integer> notes) {
+        ArrayList<Integer> notes = tonality.getTonalityNotes();
         ArrayList<Integer> result = new ArrayList<>();
         int tonic = notes.get(0);
         int subdom = notes.get(3);
@@ -151,6 +152,7 @@ public class Particle {
     }
 
     private int[] getRandomChord() {
+        ArrayList<Integer> tonalityNotes = tonality.getTonalityNotes();
         int[] chord = new int[3];
         for (int i = 0; i < 3; i++) {
             int randomIndex = ThreadLocalRandom.current().nextInt(0, tonalityNotes.size());

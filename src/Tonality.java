@@ -1,15 +1,24 @@
-import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class Swarm {
+public class Tonality {
+    private int tonic;
+    private int mode;
+    private ArrayList<Integer> tonalityNotes;
 
-    protected Pair<Integer, Integer> generateTonality() {
-        return new Pair<>(getRand(Constants.LOW_VAL, Constants.LOW_VAL + 12), getRand(0, 1));
+    Tonality() {
+        tonic = getRand(Constants.LOW_VAL, Constants.LOW_VAL + 12);
+        mode = getRand(0, 1);
+        tonalityNotes = produceTonalityNotes();
     }
 
-    protected ArrayList<Integer> getTonalityNotes(int tonic, int mode) {
+    public boolean contains(int note) {
+        return tonalityNotes.contains(note);
+    }
+
+    private ArrayList<Integer> produceTonalityNotes() {
         int upperBorder = Constants.UP_VAL;
+
         ArrayList<Integer> result = new ArrayList<>();
 
         int[] octavePositions;
@@ -34,8 +43,16 @@ public abstract class Swarm {
         return ThreadLocalRandom.current().nextInt(low,high + 1);
     }
 
-    public abstract void nextIteration();
-    public abstract void dropSwarm();
-    protected abstract void updateGlobal();
+    public int getTonic() {
+        return tonic;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public ArrayList<Integer> getTonalityNotes() {
+        return tonalityNotes;
+    }
 
 }
