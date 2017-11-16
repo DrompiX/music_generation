@@ -61,15 +61,28 @@ public class MParticle {
     /* TODO: Write correct implementation */
     private int findFitness() {
         int fitness = 0;
+        int chordTopNote = 0;
         for (int i = 0; i < curPos.length; i++) {
             if (i % 2 == 0) {
                 fitness += chords.get(i / 2).isSuitable(curPos[i]) ? 1000 : -1000;
+                chordTopNote = chords.get(i / 2).notes[2];
             } else {
-                fitness += tonality.contains(curPos[i]) ? 1000 : -1000;
+                fitness += tonality.contains(curPos[i]) && curPos[i] > chordTopNote ? 1000 : -1000;
             }
-            if (i < curPos.length - 1 && Math.abs(curPos[i] - curPos[i + 1]) <= 12) fitness += 500;
-            else fitness -= 1000;
+            if (i > 0 && Math.abs(curPos[i - 1] - curPos[i]) <= 12) fitness += 500;
+            else if (i != 0) fitness -= 1000;
         }
+        boolean noRepetitions = true;
+        for (int i = 0; i < curPos.length - 3; i++) {
+//            System.out.println(i + " " + (i + 3));
+            if (curPos[i] == curPos[i] && curPos[i] == curPos[i + 2]) {
+                noRepetitions = false;
+                break;
+            }
+        }
+        if (!noRepetitions)
+            if (fitness > 10000) fitness = 10000;
+            else fitness = 5000;
         return fitness;
     }
 
@@ -81,16 +94,8 @@ public class MParticle {
         return ThreadLocalRandom.current().nextDouble(low,high + 1);
     }
 
-    public int[] getCurPos() {
-        return curPos;
-    }
-
     public int[] getBestPos() {
         return bestPos;
-    }
-
-    public double[] getVelocity() {
-        return velocity;
     }
 
     public int getFitness() {

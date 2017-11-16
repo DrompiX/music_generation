@@ -77,7 +77,7 @@ public class Particle {
         for (int i = 0; i < curPos.size(); i++) {
             int[] chord = curPos.get(i).notes;
 
-            fitness += tonality.contains(chord[0]) ? 250 : -1000;
+            fitness += tonality.contains(chord[0]) /*&& tonality.inLowest(chord[0])*/ ? 250 : -1000;
             fitness += tonality.contains(chord[1]) ? 250 : -1000;
             fitness += tonality.contains(chord[2]) ? 250 : -1000;
 

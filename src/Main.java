@@ -1,8 +1,10 @@
+import org.jfugue.midi.MidiFileManager;
+import org.jfugue.pattern.Pattern;
+
+import java.io.File;
 import java.util.ArrayList;
 
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Synthesizer;
+import javax.sound.midi.*;
 
 public class Main {
 
@@ -15,16 +17,11 @@ public class Main {
         ChordSwarm cSwarm = new ChordSwarm(tonality);
         ArrayList<Chord> chordsResult = generateAllChords(cSwarm, tonality);
         ArrayList<ArrayList<Chord>> chordBars = getBars(chordsResult);
-        /*for (int i = 0; i < chordBars.size(); i++) {
-            System.out.print("I: " + i + " | ");
-            for (Chord c: chordBars.get(i))
-                System.out.print(c + " ");
-            System.out.println();
-        }*/
 
         System.out.println("FITNESS: " + cSwarm.getgFitness());
         for (Chord c: chordsResult)
             System.out.print(c);
+        System.out.println();
 
         MelodySwarm mSwarm = new MelodySwarm(tonality, chordBars.get(0));
         ArrayList<Integer> melodyResult = generateAllNotes(mSwarm, tonality, chordBars);
@@ -32,7 +29,9 @@ public class Main {
         for (Integer c: melodyResult)
             System.out.print(c + " ");
 
-        for (int i = 0; i < melodyResult.size(); i += 2) {
+        writeToMidi(chordsResult, melodyResult);
+
+        /*for (int i = 0; i < melodyResult.size(); i += 2) {
             if (i > 0) channels[0].noteOff(melodyResult.get(i - 1));
 
             for (int c : chordsResult.get(i / 2).notes)
@@ -48,6 +47,27 @@ public class Main {
 
             channels[0].noteOn(melodyResult.get(i + 1), 75);
             Thread.sleep(1000);
+        }*/
+    }
+
+    private static void writeToMidi(ArrayList<Chord> chords, ArrayList<Integer> melody) {
+        StringBuilder musicString = new StringBuilder();
+        for (int i = 0; i < melody.size(); i+=2) {
+            for (int j = 0; j < 3; j++) {
+                musicString.append(chords.get(i / 2).notes[j]);
+                musicString.append("h+");
+            }
+            musicString.append(melody.get(i));
+            musicString.append("h ");
+            musicString.append(melody.get(i + 1));
+            musicString.append("h ");
+        }
+        Pattern pattern = new Pattern(musicString.toString()).setVoice(0).setInstrument("Piano").setTempo(140);
+        File midi = new File("gen_music.mid");
+        try {
+            MidiFileManager.savePatternToMidi(pattern, midi);
+        } catch (Exception ex) {
+            System.out.println("Exception in midi output: " + ex.getMessage());
         }
     }
 
@@ -69,8 +89,8 @@ public class Main {
         /*if (result.get(curSize - 2) == result.get(curSize - 1) &&
                 (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))*/
         // TODO: check condition to eliminate 3 chords in a row || DOESN'T WORK
-        if (curSize > 0 && (result.get(curSize - 2) == result.get(curSize - 1) && result.get(curSize - 1) == bar.get(0)
-                || result.get(curSize - 1) == bar.get(0) && result.get(0) == bar.get(1)))
+        if (curSize > 0 && (result.get(curSize - 2).equals(result.get(curSize - 1)) && result.get(curSize - 1).equals(bar.get(0))
+                || result.get(curSize - 1).equals(bar.get(0)) && result.get(0).equals(bar.get(1))))
             return false;
 
         for (Chord c : bar) result.add(c.cloneIt());

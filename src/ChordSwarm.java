@@ -56,8 +56,4 @@ public class ChordSwarm {
         return gFitness;
     }
 
-    public ArrayList<Particle> getSwarm() {
-        return swarm;
-    }
-
 }
