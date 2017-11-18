@@ -45,7 +45,7 @@ public class Main {
         ArrayList<Chord> bar = new ArrayList<>();
         int it = 0;
 
-        System.out.print("Generating chord bar #" + (++barCnt));
+        System.out.print("Generating chord bar #" + (++barCnt) + "...");
         while (swarm.getgFitness() < Constants.C_NICE_FITNESS && it < Constants.C_MAX_IT) {
             swarm.nextIteration();
             it++;
@@ -61,7 +61,7 @@ public class Main {
                 && result.get(curSize - 1).equals(bar.get(0))
                 || result.get(curSize - 1).equals(bar.get(0))
                 && result.get(0).equals(bar.get(1)))) {
-            System.out.println("Bad sequence, we have 3 or more same chords... try again");
+            System.out.println(" | Bad sequence, we have 3 or more same chords... try again :(");
             barCnt--;
             return false;
         }
@@ -85,7 +85,7 @@ public class Main {
         ArrayList<Integer> bar = new ArrayList<>();
         int it = 0;
 
-        System.out.print("Generating melody bar #" + (++barCnt));
+        System.out.print("Generating melody bar #" + (++barCnt) + "...");
         while (swarm.getgFitness() < Constants.M_NICE_FITNESS && it < Constants.M_MAX_IT) {
             swarm.nextIteration();
             it++;
@@ -101,7 +101,7 @@ public class Main {
                 && result.get(curSize - 1).equals(bar.get(0)))
                 || (result.get(curSize - 1).equals(bar.get(0))
                 && result.get(0).equals(bar.get(1))))) {
-            System.out.println("Bad sequence, we have 3 or more same chords... try again");
+            System.out.println(" | Bad sequence, we have 3 or more same chords... try again :(");
             barCnt--;
             return false;
         }

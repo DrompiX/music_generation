@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class ChordSwarm {
-    private ArrayList<Particle> swarm;
+    private ArrayList<CParticle> swarm;
     private ArrayList<Chord> globalPos;
     private int gFitness;
 
@@ -10,7 +10,7 @@ public class ChordSwarm {
         gFitness = Integer.MIN_VALUE;
 
         for (int i = 0; i < Constants.C_SWARMSIZE; i++)
-            swarm.add(new Particle(tonality));
+            swarm.add(new CParticle(tonality));
 
         updateGlobal();
     }

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Particle {
+public class CParticle {
     private ArrayList<Chord> curPos;
     private ArrayList<Chord> bestPos;
     private double[][] velocity;
@@ -10,7 +10,7 @@ public class Particle {
     private ArrayList<Integer> startingNotes;
     private int fitness;
 
-    Particle(Tonality tonality) {
+    CParticle(Tonality tonality) {
         this.curPos = new ArrayList<>();
         this.bestPos = new ArrayList<>();
         this.velocity = new double[Constants.C_DIMENSIONS][3];

@@ -1,6 +1,6 @@
 public interface Constants {
-    int LOW_VAL = 36;//48;
-    int UP_VAL = 84;//96;
+    int LOW_VAL = 48;
+    int UP_VAL = 96;
 
     int C_SWARMSIZE = 4759;
     int C_DIMENSIONS = 4;
