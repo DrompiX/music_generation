@@ -49,6 +49,9 @@ public class MParticle {
         bestPos = curPos.clone();
     }
 
+    /***
+     * This method adds velocity to the current position of the particle.
+     */
     private void updateNotes() {
         for (int i = 0; i < velocity.length; i++) {
             curPos[i] += ((int) velocity[i]) % 97 - 48;
@@ -70,6 +73,7 @@ public class MParticle {
             if (i > 0 && Math.abs(curPos[i - 1] - curPos[i]) <= 12) fitness += 500;
             else if (i != 0) fitness -= 1000;
         }
+
         boolean noRepetitions = true;
         for (int i = 0; i < curPos.length - 3; i++) {
             if (curPos[i] == curPos[i] && curPos[i] == curPos[i + 2]) {
@@ -77,9 +81,11 @@ public class MParticle {
                 break;
             }
         }
+
         if (!noRepetitions)
             if (fitness > 10000) fitness = 10000;
             else fitness = 5000;
+
         return fitness;
     }
 

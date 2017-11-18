@@ -15,6 +15,11 @@ public class Chord {
         return c;
     }
 
+    /***
+     * This method checks if note is good for this chord.
+     * @param note - note to check
+     * @return true - if note is good, false - otherwise
+     */
     public boolean isSuitable(int note) {
         for (int note1 : notes)
             if (note % 12 == note1 % 12 && note > note1 && Math.abs(note - note1) <= 12)

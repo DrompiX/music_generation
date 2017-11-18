@@ -16,6 +16,10 @@ public class Tonality {
         return tonalityNotes.contains(note);
     }
 
+    /***
+     * This method produces an array of notes which are in current tonality.
+     * @return array of corresponding notes.
+     */
     private ArrayList<Integer> produceTonalityNotes() {
         int upperBorder = Constants.UP_VAL;
 

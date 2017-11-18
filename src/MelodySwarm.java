@@ -1,9 +1,12 @@
 import java.util.ArrayList;
 
+/***
+ * This class represents swarm for generating melody.
+ */
 public class MelodySwarm {
     private ArrayList<MParticle> swarm;
-    private int[] globalPos;
-    private int gFitness;
+    private int[] globalPos; // Global best position
+    private int gFitness;    // Global best fitness
 
     MelodySwarm(Tonality tonality, ArrayList<Chord> chords) {
         swarm = new ArrayList<>();

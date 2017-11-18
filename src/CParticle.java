@@ -55,6 +55,10 @@ public class CParticle {
             bestPos.add(c.cloneIt());
     }
 
+    /***
+     * This method adds velocity to the current position of the particle.
+     * Moreover, it makes sorting of the chord's notes.
+     */
     private void updateChords() {
         for (int i = 0; i < velocity.length; i++) {
             int[] chord = curPos.get(i).notes;
@@ -125,6 +129,10 @@ public class CParticle {
         return startingNotes.indexOf(note) % 3 == 0;
     }
 
+    /***
+     * Returns all tonics, subdominants and dominants from a given tonality.
+     * @param tonality to process
+     */
     private ArrayList<Integer> getStartingNotes(Tonality tonality) {
         ArrayList<Integer> notes = tonality.getTonalityNotes();
         ArrayList<Integer> result = new ArrayList<>();
