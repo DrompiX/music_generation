@@ -10,7 +10,6 @@ public class Particle {
     private ArrayList<Integer> startingNotes;
     private int fitness;
 
-    /* Mode - major / minor */
     Particle(Tonality tonality) {
         this.curPos = new ArrayList<>();
         this.bestPos = new ArrayList<>();
@@ -22,7 +21,6 @@ public class Particle {
         fitness = findFitness();
     }
 
-    /* TODO: TEST Particle initialization */
     private void init() {
         int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
         int max_v = -min_v;
@@ -66,11 +64,10 @@ public class Particle {
                     chord[j] = chord[j] % 49 + 48;
             }
             curPos.set(i, new Chord(chord));
-            Arrays.sort(curPos.get(i).notes); //TODO
+            Arrays.sort(curPos.get(i).notes);
         }
     }
 
-    /* TODO: Write correct implementation */
     private int findFitness() {
         int fitness = 0;
         int mode = tonality.getMode();
@@ -128,15 +125,7 @@ public class Particle {
         return startingNotes.indexOf(note) % 3 == 0;
     }
 
-    private boolean isSubdominant(int note) {
-        return startingNotes.indexOf(note) % 3 == 1;
-    }
-
-    private boolean isDominant(int note) {
-        return startingNotes.indexOf(note) % 3 == 2;
-    }
-
-    private ArrayList<Integer> getStartingNotes(Tonality tonality) {//ArrayList<Integer> notes) {
+    private ArrayList<Integer> getStartingNotes(Tonality tonality) {
         ArrayList<Integer> notes = tonality.getTonalityNotes();
         ArrayList<Integer> result = new ArrayList<>();
         int tonic = notes.get(0);
@@ -165,16 +154,8 @@ public class Particle {
         return ThreadLocalRandom.current().nextDouble(low,high + 1);
     }
 
-    public ArrayList<Chord> getCurPos() {
-        return curPos;
-    }
-
     public ArrayList<Chord> getBestPos() {
         return bestPos;
-    }
-
-    public double[][] getVelocity() {
-        return velocity;
     }
 
     public int getFitness() {

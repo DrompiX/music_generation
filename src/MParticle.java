@@ -20,7 +20,6 @@ public class MParticle {
         fitness = findFitness();
     }
 
-    /* TODO: TEST Particle initialization */
     private void init() {
         int min_v = -(Constants.UP_VAL - Constants.LOW_VAL);
         int max_v = -min_v;
@@ -58,7 +57,6 @@ public class MParticle {
         }
     }
 
-    /* TODO: Write correct implementation */
     private int findFitness() {
         int fitness = 0;
         int chordTopNote = 0;
@@ -74,7 +72,6 @@ public class MParticle {
         }
         boolean noRepetitions = true;
         for (int i = 0; i < curPos.length - 3; i++) {
-//            System.out.println(i + " " + (i + 3));
             if (curPos[i] == curPos[i] && curPos[i] == curPos[i + 2]) {
                 noRepetitions = false;
                 break;

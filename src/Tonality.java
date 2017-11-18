@@ -16,10 +16,6 @@ public class Tonality {
         return tonalityNotes.contains(note);
     }
 
-    public boolean inLowest(int note) {
-        return tonalityNotes.indexOf(note) < 8;
-    }
-
     private ArrayList<Integer> produceTonalityNotes() {
         int upperBorder = Constants.UP_VAL;
 

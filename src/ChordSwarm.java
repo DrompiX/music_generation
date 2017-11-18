@@ -8,13 +8,6 @@ public class ChordSwarm {
     ChordSwarm(Tonality tonality) {
         swarm = new ArrayList<>();
         gFitness = Integer.MIN_VALUE;
-        System.out.println("Chords: " + tonality.getTonic() + " " + tonality.getMode()); // TODO: Remove
-
-        ArrayList<Integer> tonalityNotes = tonality.getTonalityNotes();
-        for (Integer ton: tonalityNotes) { // TODO: Remove
-            System.out.print(ton + " ");
-        }
-        System.out.println();
 
         for (int i = 0; i < Constants.C_SWARMSIZE; i++)
             swarm.add(new Particle(tonality));
@@ -37,14 +30,9 @@ public class ChordSwarm {
             }
         }
         if (index != -1) {
-            System.out.println("new global best: " + gFitness);
             globalPos = new ArrayList<>();
             ArrayList<Chord> best_pos = swarm.get(index).getBestPos();
-            for (Chord best_p : best_pos) {
-                globalPos.add(best_p.cloneIt());
-                System.out.print(best_p);
-            }
-            System.out.println();
+            for (Chord best_p : best_pos) globalPos.add(best_p.cloneIt());
         }
     }
 

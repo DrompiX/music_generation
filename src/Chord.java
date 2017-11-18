@@ -9,11 +9,6 @@ public class Chord {
         this.notes = notes;
     }
 
-    @Override
-    public String toString() {
-        return "(" + notes[0] + ", " + notes[1] + ", " + notes[2] + ")";
-    }
-
     public Chord cloneIt() {
         Chord c = new Chord();
         System.arraycopy(notes, 0, c.notes, 0, 3);
@@ -37,4 +32,10 @@ public class Chord {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "(" + notes[0] + ", " + notes[1] + ", " + notes[2] + ")";
+    }
+
 }

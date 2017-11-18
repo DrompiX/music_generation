@@ -4,63 +4,33 @@ import org.jfugue.pattern.Pattern;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.sound.midi.*;
 
 public class Main {
+    private static int barCnt;
 
     public static void main(String[] args) throws Exception {
         Tonality tonality = new Tonality();
-        Synthesizer synth = MidiSystem.getSynthesizer();
-        synth.open();
-        MidiChannel[] channels = synth.getChannels();
-
         ChordSwarm cSwarm = new ChordSwarm(tonality);
+
+        barCnt = 0;
         ArrayList<Chord> chordsResult = generateAllChords(cSwarm, tonality);
         ArrayList<ArrayList<Chord>> chordBars = getBars(chordsResult);
 
-        System.out.println("FITNESS: " + cSwarm.getgFitness());
-        for (Chord c: chordsResult)
-            System.out.print(c);
-        System.out.println();
-
+        barCnt = 0;
         MelodySwarm mSwarm = new MelodySwarm(tonality, chordBars.get(0));
         ArrayList<Integer> melodyResult = generateAllNotes(mSwarm, tonality, chordBars);
-        System.out.println("FITNESS: " + mSwarm.getgFitness());
-        for (Integer c: melodyResult)
-            System.out.print(c + " ");
 
         writeToMidi(chordsResult, melodyResult);
-
-        /*for (int i = 0; i < melodyResult.size(); i += 2) {
-            if (i > 0) channels[0].noteOff(melodyResult.get(i - 1));
-
-            for (int c : chordsResult.get(i / 2).notes)
-                channels[0].noteOn(c, 75);
-
-            channels[0].noteOn(melodyResult.get(i), 75);
-
-            Thread.sleep(1000);
-
-            for (int c : chordsResult.get(i / 2).notes)
-                channels[0].noteOff(c);
-            channels[0].noteOff(melodyResult.get(i));
-
-            channels[0].noteOn(melodyResult.get(i + 1), 75);
-            Thread.sleep(1000);
-        }*/
     }
 
     private static void writeToMidi(ArrayList<Chord> chords, ArrayList<Integer> melody) {
         StringBuilder musicString = new StringBuilder();
-        for (int i = 0; i < melody.size(); i+=2) {
-            for (int j = 0; j < 3; j++) {
-                musicString.append(chords.get(i / 2).notes[j]);
-                musicString.append("h+");
-            }
-            musicString.append(melody.get(i));
-            musicString.append("h ");
-            musicString.append(melody.get(i + 1));
-            musicString.append("h ");
+        for (int i = 0; i < melody.size(); i += 2) {
+            for (int j = 0; j < 3; j++)
+                musicString.append(chords.get(i / 2).notes[j]).append("h+");
+
+            musicString.append(melody.get(i)).append("h ");
+            musicString.append(melody.get(i + 1)).append("h ");
         }
         Pattern pattern = new Pattern(musicString.toString()).setVoice(0).setInstrument("Piano").setTempo(140);
         File midi = new File("gen_music.mid");
@@ -75,6 +45,7 @@ public class Main {
         ArrayList<Chord> bar = new ArrayList<>();
         int it = 0;
 
+        System.out.print("Generating chord bar #" + (++barCnt));
         while (swarm.getgFitness() < Constants.C_NICE_FITNESS && it < Constants.C_MAX_IT) {
             swarm.nextIteration();
             it++;
@@ -86,14 +57,17 @@ public class Main {
     private static boolean appendChordBar(ArrayList<Chord> result, ArrayList<Chord> bar) {
         int curSize = result.size();
 
-        /*if (result.get(curSize - 2) == result.get(curSize - 1) &&
-                (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))*/
-        // TODO: check condition to eliminate 3 chords in a row || DOESN'T WORK
-        if (curSize > 0 && (result.get(curSize - 2).equals(result.get(curSize - 1)) && result.get(curSize - 1).equals(bar.get(0))
-                || result.get(curSize - 1).equals(bar.get(0)) && result.get(0).equals(bar.get(1))))
+        if (curSize > 0 && (result.get(curSize - 2).equals(result.get(curSize - 1))
+                && result.get(curSize - 1).equals(bar.get(0))
+                || result.get(curSize - 1).equals(bar.get(0))
+                && result.get(0).equals(bar.get(1)))) {
+            System.out.println("Bad sequence, we have 3 or more same chords... try again");
+            barCnt--;
             return false;
+        }
 
         for (Chord c : bar) result.add(c.cloneIt());
+        System.out.println(" | Successful!");
         return true;
     }
 
@@ -111,6 +85,7 @@ public class Main {
         ArrayList<Integer> bar = new ArrayList<>();
         int it = 0;
 
+        System.out.print("Generating melody bar #" + (++barCnt));
         while (swarm.getgFitness() < Constants.M_NICE_FITNESS && it < Constants.M_MAX_IT) {
             swarm.nextIteration();
             it++;
@@ -122,17 +97,17 @@ public class Main {
     private static boolean appendNoteBar(ArrayList<Integer> result, ArrayList<Integer> bar) {
         int curSize = result.size();
 
-        /*if (result.get(curSize - 2) == result.get(curSize - 1) &&
-                (result.get(curSize - 1) == bar.get(0) || bar.get(0) == bar.get(1)))*/
-        /* TODO: check condition to eliminate 3 chords in a row ||| DOESN'T WORK!!! */
-        if (curSize == 0) { result.addAll(bar); return true; }
-        if ((result.get(curSize - 2).equals(result.get(curSize - 1))
+        if (curSize > 0 && ((result.get(curSize - 2).equals(result.get(curSize - 1))
                 && result.get(curSize - 1).equals(bar.get(0)))
                 || (result.get(curSize - 1).equals(bar.get(0))
-                && result.get(0).equals(bar.get(1))))
+                && result.get(0).equals(bar.get(1))))) {
+            System.out.println("Bad sequence, we have 3 or more same chords... try again");
+            barCnt--;
             return false;
+        }
 
         result.addAll(bar);
+        System.out.println(" | Successful!");
         return true;
     }
 
