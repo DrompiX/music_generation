@@ -33,7 +33,7 @@ public class MParticle {
     public void nextIteration(int[] globalPos) {
         for (int i = 0; i < velocity.length; i++) {
             velocity[i] = Constants.M_W * velocity[i] +
-                    Constants.M_C1 * getRandDouble(0, 1) * (bestPos[i] - curPos[i]) *
+                    Constants.M_C1 * getRandDouble(0, 1) * (bestPos[i] - curPos[i]) +
                             Constants.M_C2 * getRandDouble(0, 1) * (globalPos[i] - curPos[i]);
         }
         updateNotes();
@@ -54,9 +54,9 @@ public class MParticle {
      */
     private void updateNotes() {
         for (int i = 0; i < velocity.length; i++) {
-            curPos[i] += ((int) velocity[i]) % 97 - 48;
-            if (curPos[i] < 48 || curPos[i] > 96)
-                curPos[i] = curPos[i] % 49 + 48;
+            curPos[i] += ((int) velocity[i]) % (Constants.UP_VAL + 1) - Constants.LOW_VAL;
+            if (curPos[i] < Constants.LOW_VAL || curPos[i] > Constants.UP_VAL)
+                curPos[i] = curPos[i] % (Constants.LOW_VAL + 1) + Constants.LOW_VAL;
         }
     }
 
@@ -76,7 +76,7 @@ public class MParticle {
 
         boolean noRepetitions = true;
         for (int i = 0; i < curPos.length - 3; i++) {
-            if (curPos[i] == curPos[i] && curPos[i] == curPos[i + 2]) {
+            if (curPos[i] == curPos[i + 1] && curPos[i + 1] == curPos[i + 2]) {
                 noRepetitions = false;
                 break;
             }

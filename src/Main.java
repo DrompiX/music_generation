@@ -12,13 +12,22 @@ public class Main {
         Tonality tonality = new Tonality();
         ChordSwarm cSwarm = new ChordSwarm(tonality);
 
+        long startTime = System.currentTimeMillis();
+
         barCnt = 0;
         ArrayList<Chord> chordsResult = generateAllChords(cSwarm, tonality);
         ArrayList<ArrayList<Chord>> chordBars = getBars(chordsResult);
 
+        System.out.println("Time spent for chord generation: " +
+                ((System.currentTimeMillis() - startTime)) / 1000 + "s");
+
+        startTime = System.currentTimeMillis();
         barCnt = 0;
         MelodySwarm mSwarm = new MelodySwarm(tonality, chordBars.get(0));
         ArrayList<Integer> melodyResult = generateAllNotes(mSwarm, tonality, chordBars);
+
+        System.out.println("Time spent for melody generation: " +
+                ((System.currentTimeMillis() - startTime)) / 1000 + "s");
 
         writeToMidi(chordsResult, melodyResult);
     }
@@ -37,8 +46,8 @@ public class Main {
             musicString.append(melody.get(i)).append("h ");
             musicString.append(melody.get(i + 1)).append("h ");
         }
-        Pattern pattern = new Pattern(musicString.toString()).setVoice(0).setInstrument("Piano").setTempo(140);
-        File midi = new File("gen_music.mid");
+        Pattern pattern = new Pattern(musicString.toString()).setVoice(0).setInstrument("Piano").setTempo(150);
+        File midi = new File("DmitryTurenko.mid");
         try {
             MidiFileManager.savePatternToMidi(pattern, midi);
         } catch (Exception ex) {
@@ -60,7 +69,13 @@ public class Main {
             swarm.nextIteration();
             it++;
         }
+        System.out.print(" | Generations for chord bar #" + barCnt + ": " + it);
         for (Chord c: swarm.getGlobalPos()) bar.add(c.cloneIt());
+        if (it == Constants.C_MAX_IT) {
+            System.out.println(" | Lose!");
+            barCnt--;
+            bar = generateChordBar(swarm);
+        }
         return bar;
     }
 
@@ -117,7 +132,13 @@ public class Main {
             swarm.nextIteration();
             it++;
         }
+        System.out.print(" | Generations for chord bar #" + barCnt + ": " + it);
         for (Integer i: swarm.getGlobalPos()) bar.add(i);
+        if (it == Constants.M_MAX_IT) {
+            bar = generateNoteBar(swarm);
+            System.out.println(" | Lose!");
+            barCnt--;
+        }
         return bar;
     }
 

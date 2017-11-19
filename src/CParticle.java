@@ -36,7 +36,7 @@ public class CParticle {
         for (int i = 0; i < velocity.length; i++) {
             for (int j = 0; j < velocity[i].length; j++) {
                 velocity[i][j] = Constants.C_W * velocity[i][j] +
-                        Constants.C_C1 * getRand(0, 1) * (bestPos.get(i).notes[j] - curPos.get(i).notes[j]) *
+                        Constants.C_C1 * getRand(0, 1) * (bestPos.get(i).notes[j] - curPos.get(i).notes[j]) +
                                 Constants.C_C2 * getRand(0, 1) * (globalPos.get(i).notes[j] - curPos.get(i).notes[j]);
             }
         }
@@ -63,9 +63,9 @@ public class CParticle {
         for (int i = 0; i < velocity.length; i++) {
             int[] chord = curPos.get(i).notes;
             for (int j = 0; j < velocity[i].length; j++) {
-                chord[j] += ((int) velocity[i][j]) % 97 - 48;
-                if (chord[j] < 48 || chord[j] > 96)
-                    chord[j] = chord[j] % 49 + 48;
+                chord[j] += ((int) velocity[i][j]) % (Constants.UP_VAL + 1) - Constants.LOW_VAL;
+                if (chord[j] < Constants.LOW_VAL || chord[j] > Constants.UP_VAL)
+                    chord[j] = chord[j] % (Constants.LOW_VAL + 1) + Constants.LOW_VAL;
             }
             curPos.set(i, new Chord(chord));
             Arrays.sort(curPos.get(i).notes);
@@ -78,7 +78,7 @@ public class CParticle {
         for (int i = 0; i < curPos.size(); i++) {
             int[] chord = curPos.get(i).notes;
 
-            fitness += tonality.contains(chord[0]) /*&& tonality.inLowest(chord[0])*/ ? 250 : -1000;
+            fitness += tonality.contains(chord[0]) ? 250 : -1000;
             fitness += tonality.contains(chord[1]) ? 250 : -1000;
             fitness += tonality.contains(chord[2]) ? 250 : -1000;
 
@@ -121,7 +121,7 @@ public class CParticle {
                     sameChord++;
             }
         }
-        fitness = sameChord > 1 ? 7000 : fitness;
+        fitness = sameChord > 1 ? 5500 : fitness;
         return fitness;
     }
 
