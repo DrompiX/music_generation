@@ -47,7 +47,7 @@ public class Main {
             musicString.append(melody.get(i + 1)).append("h ");
         }
         Pattern pattern = new Pattern(musicString.toString()).setVoice(0).setInstrument("Piano").setTempo(150);
-        File midi = new File("DmitryTurenko.mid");
+        File midi = new File("result.mid");
         try {
             MidiFileManager.savePatternToMidi(pattern, midi);
         } catch (Exception ex) {
